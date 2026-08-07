@@ -1,13 +1,15 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Search, Sun, Moon, Menu, X, Sparkles, LayoutDashboard, Compass, User, Mic } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Search, Sun, Moon, Menu, X, Sparkles, LayoutDashboard, Compass, Mic, Home, Users, Info } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
-import { currentUser } from '@/data/courses';
 
 const navLinks = [
-  { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+  { label: 'Home', path: '/', icon: Home },
   { label: 'Explore', path: '/explore', icon: Compass },
-  { label: 'Profile', path: '/profile', icon: User },
+  { label: 'Speakers', path: '/explore?cat=Speakers', icon: Users },
+  { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+  { label: 'About', path: '/about', icon: Info },
 ];
 
 export default function Navbar() {
@@ -41,7 +43,10 @@ export default function Navbar() {
 
   return (
     <>
-      <header
+      <motion.header
+        initial={{ y: -80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled ? 'glass shadow-lg shadow-black/5' : 'bg-transparent'
         }`}
@@ -73,7 +78,10 @@ export default function Navbar() {
                   >
                     {link.label}
                     {active && (
-                      <span className="absolute inset-x-3 -bottom-px h-px gradient-brand rounded-full" />
+                      <motion.span
+                        layoutId="nav-underline"
+                        className="absolute inset-x-3 -bottom-px h-px gradient-brand rounded-full"
+                      />
                     )}
                   </Link>
                 );
@@ -117,14 +125,23 @@ export default function Navbar() {
 
               <Link
                 to="/profile"
-                className="hidden sm:block ml-1 group"
+                className="hidden lg:inline-flex items-center px-3.5 py-2 rounded-lg text-sm font-medium border transition-all hover:border-brand-400/50"
+                style={{ color: 'var(--text-primary)', borderColor: 'var(--border-color)' }}
               >
-                <img
-                  src={currentUser.avatar}
-                  alt={currentUser.name}
-                  className="w-8 h-8 rounded-full object-cover ring-2 ring-transparent group-hover:ring-brand-400/50 transition-all"
-                />
+                Login
               </Link>
+
+              <motion.div
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                <Link
+                  to="/dashboard"
+                  className="hidden lg:inline-flex items-center px-4 py-2 rounded-lg text-sm font-semibold gradient-brand text-white shadow-lg shadow-brand-500/30"
+                >
+                  Get Started
+                </Link>
+              </motion.div>
 
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
@@ -138,82 +155,115 @@ export default function Navbar() {
           </div>
         </nav>
 
-        {mobileOpen && (
-          <div className="md:hidden glass border-t" style={{ borderColor: 'var(--border-color)' }}>
-            <div className="px-4 py-4 space-y-1">
-              {navLinks.map((link) => {
-                const Icon = link.icon;
-                const active = location.pathname === link.path;
-                return (
+        <AnimatePresence>
+          {mobileOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="md:hidden glass border-t overflow-hidden"
+              style={{ borderColor: 'var(--border-color)' }}
+            >
+              <div className="px-4 py-4 space-y-1">
+                {navLinks.map((link) => {
+                  const Icon = link.icon;
+                  const active = location.pathname === link.path;
+                  return (
+                    <Link
+                      key={link.path}
+                      to={link.path}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                        active ? 'gradient-brand text-white' : 'hover:bg-black/5 dark:hover:bg-white/5'
+                      }`}
+                      style={{ color: active ? 'white' : 'var(--text-secondary)' }}
+                    >
+                      <Icon className="w-4 h-4" />
+                      {link.label}
+                    </Link>
+                  );
+                })}
+                <div className="pt-2 flex gap-2">
                   <Link
-                    key={link.path}
-                    to={link.path}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                      active ? 'gradient-brand text-white' : 'hover:bg-black/5 dark:hover:bg-white/5'
-                    }`}
-                    style={{ color: active ? 'white' : 'var(--text-secondary)' }}
+                    to="/profile"
+                    className="flex-1 text-center px-3 py-2.5 rounded-lg text-sm font-medium border"
+                    style={{ color: 'var(--text-primary)', borderColor: 'var(--border-color)' }}
                   >
-                    <Icon className="w-4 h-4" />
-                    {link.label}
+                    Login
                   </Link>
-                );
-              })}
-            </div>
-          </div>
-        )}
-      </header>
+                  <Link
+                    to="/dashboard"
+                    className="flex-1 text-center px-3 py-2.5 rounded-lg text-sm font-semibold gradient-brand text-white"
+                  >
+                    Get Started
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.header>
 
-      {searchOpen && (
-        <div
-          className="fixed inset-0 z-[60] flex items-start justify-center pt-[10vh] px-4"
-          onClick={() => setSearchOpen(false)}
-        >
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-fade-in" />
-          <form
-            onSubmit={handleSearch}
-            onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-2xl glass-strong rounded-2xl shadow-2xl animate-scale-in overflow-hidden"
+      <AnimatePresence>
+        {searchOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] flex items-start justify-center pt-[10vh] px-4"
+            onClick={() => setSearchOpen(false)}
           >
-            <div className="flex items-center gap-3 px-5 py-4 border-b" style={{ borderColor: 'var(--border-color)' }}>
-              <Sparkles className="w-5 h-5 text-brand-500 shrink-0" />
-              <input
-                autoFocus
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search talks, topics, speakers..."
-                className="flex-1 bg-transparent outline-none text-base"
-                style={{ color: 'var(--text-primary)' }}
-              />
-              <button
-                type="button"
-                onClick={() => setSearchOpen(false)}
-                className="p-1 rounded-md hover:bg-black/10 dark:hover:bg-white/10"
-                style={{ color: 'var(--text-tertiary)' }}
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-            <div className="px-5 py-3 flex items-center gap-2 text-xs" style={{ color: 'var(--text-tertiary)' }}>
-              <span>Try:</span>
-              {['Artificial Intelligence', 'Design', 'Leadership', 'Startups'].map((tag) => (
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+            <motion.form
+              initial={{ scale: 0.95, opacity: 0, y: -20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: -20 }}
+              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              onSubmit={handleSearch}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-2xl glass-strong rounded-2xl shadow-2xl overflow-hidden"
+            >
+              <div className="flex items-center gap-3 px-5 py-4 border-b" style={{ borderColor: 'var(--border-color)' }}>
+                <Sparkles className="w-5 h-5 text-brand-500 shrink-0" />
+                <input
+                  autoFocus
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search talks, topics, speakers..."
+                  className="flex-1 bg-transparent outline-none text-base"
+                  style={{ color: 'var(--text-primary)' }}
+                />
                 <button
-                  key={tag}
                   type="button"
-                  onClick={() => {
-                    navigate(`/explore?q=${encodeURIComponent(tag)}`);
-                    setSearchOpen(false);
-                  }}
-                  className="px-2 py-1 rounded-md border hover:border-brand-400/50 hover:text-brand-500 transition-colors"
-                  style={{ borderColor: 'var(--border-color)' }}
+                  onClick={() => setSearchOpen(false)}
+                  className="p-1 rounded-md hover:bg-black/10 dark:hover:bg-white/10"
+                  style={{ color: 'var(--text-tertiary)' }}
                 >
-                  {tag}
+                  <X className="w-4 h-4" />
                 </button>
-              ))}
-            </div>
-          </form>
-        </div>
-      )}
+              </div>
+              <div className="px-5 py-3 flex items-center gap-2 text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                <span>Try:</span>
+                {['Artificial Intelligence', 'Design', 'Leadership', 'Startups'].map((tag) => (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => {
+                      navigate(`/explore?q=${encodeURIComponent(tag)}`);
+                      setSearchOpen(false);
+                    }}
+                    className="px-2 py-1 rounded-md border hover:border-brand-400/50 hover:text-brand-500 transition-colors"
+                    style={{ borderColor: 'var(--border-color)' }}
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
+            </motion.form>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
