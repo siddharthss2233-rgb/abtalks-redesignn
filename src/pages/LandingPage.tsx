@@ -8,6 +8,7 @@ import {
 import { courses, aiRecommendations, getCourseById, currentUser } from '@/data/courses';
 import CourseCard from '@/components/CourseCard';
 import SectionHeader from '@/components/SectionHeader';
+import TrendingTalkCard, { trendingTalks } from '@/components/TrendingTalkCard';
 
 const stats = [
   { icon: Mic, label: 'Talks', value: '500+', color: 'from-blue-500 to-indigo-600' },
@@ -482,7 +483,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ============ TRENDING ============ */}
+      {/* ============ TRENDING TALKS ============ */}
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -492,25 +493,17 @@ export default function LandingPage() {
             transition={{ duration: 0.5 }}
           >
             <SectionHeader
-              title="Trending Now"
+              title="Trending Talks"
               subtitle="What the community is watching this week"
               icon={<TrendingUp className="w-6 h-6 text-brand-500" />}
               link={{ to: '/explore', label: 'Explore all' }}
             />
           </motion.div>
-          <motion.div
-            variants={stagger}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"
-          >
-            {trending.map((course, i) => (
-              <motion.div key={course.id} variants={fadeUp} custom={i}>
-                <CourseCard course={course} index={i} />
-              </motion.div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {trendingTalks.map((talk, i) => (
+              <TrendingTalkCard key={talk.id} talk={talk} index={i} />
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
