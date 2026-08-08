@@ -61,6 +61,15 @@ export interface Certificate {
   certificateId: string;
 }
 
+export interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  earned: boolean;
+  date?: string;
+}
+
 export interface UserProfile {
   name: string;
   email: string;
@@ -71,15 +80,24 @@ export interface UserProfile {
   totalWatchTime: string;
   coursesCompleted: number;
   achievements: Achievement[];
-}
 
-export interface Achievement {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  earned: boolean;
-  date?: string;
+  skills: string[];
+
+  projects: {
+    id: string;
+    name: string;
+    description: string;
+    technologies: string[];
+    link?: string;
+  }[];
+
+  experience: {
+    id: string;
+    role: string;
+    company: string;
+    duration: string;
+    description: string;
+  }[];
 }
 
 const speakers: Speaker[] = [
@@ -286,19 +304,113 @@ export const certificates: Certificate[] = [
 export const currentUser: UserProfile = {
   name: 'Alex Morgan',
   email: 'alex.morgan@example.com',
-  avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop&crop=face',
+  avatar:
+    'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop&crop=face',
   joinedDate: 'January 2026',
   bio: 'Product designer turned founder. Learning every day to build things people love.',
   streak: 23,
   totalWatchTime: '47h 30m',
   coursesCompleted: 2,
+
   achievements: [
-    { id: 'a1', title: 'Weekend Warrior', description: 'Completed 5 lessons in a single weekend', icon: 'flame', earned: true, date: 'Jul 28, 2026' },
-    { id: 'a2', title: 'Deep Diver', description: 'Finished a course rated Advanced', icon: 'anchor', earned: true, date: 'Jul 15, 2026' },
-    { id: 'a3', title: 'Consistency King', description: 'Maintained a 20-day learning streak', icon: 'crown', earned: true, date: 'Aug 5, 2026' },
-    { id: 'a4', title: 'Polymath', description: 'Completed courses in 5 different categories', icon: 'compass', earned: false },
-    { id: 'a5', title: 'Night Owl', description: 'Completed a lesson after midnight', icon: 'moon', earned: true, date: 'Aug 3, 2026' },
-    { id: 'a6', title: 'Scholar', description: 'Earned 5 certificates', icon: 'graduation', earned: false },
+    {
+      id: 'a1',
+      title: 'Weekend Warrior',
+      description: 'Completed 5 lessons in a single weekend',
+      icon: 'flame',
+      earned: true,
+      date: 'Jul 28, 2026',
+    },
+    {
+      id: 'a2',
+      title: 'Deep Diver',
+      description: 'Finished a course rated Advanced',
+      icon: 'anchor',
+      earned: true,
+      date: 'Jul 15, 2026',
+    },
+    {
+      id: 'a3',
+      title: 'Consistency King',
+      description: 'Maintained a 20-day learning streak',
+      icon: 'crown',
+      earned: true,
+      date: 'Aug 5, 2026',
+    },
+    {
+      id: 'a4',
+      title: 'Polymath',
+      description: 'Completed courses in 5 different categories',
+      icon: 'compass',
+      earned: false,
+    },
+    {
+      id: 'a5',
+      title: 'Night Owl',
+      description: 'Completed a lesson after midnight',
+      icon: 'moon',
+      earned: true,
+      date: 'Aug 3, 2026',
+    },
+    {
+      id: 'a6',
+      title: 'Scholar',
+      description: 'Earned 5 certificates',
+      icon: 'graduation',
+      earned: false,
+    },
+  ],
+
+  skills: [
+    'React',
+    'TypeScript',
+    'UI/UX Design',
+    'Product Strategy',
+    'Figma',
+    'AI Tools',
+  ],
+
+  projects: [
+    {
+      id: 'p1',
+      name: 'AI Learning Platform',
+      description: 'A platform for discovering and learning from expert AI talks.',
+      technologies: ['React', 'TypeScript', 'Tailwind CSS'],
+      link: '#',
+    },
+    {
+      id: 'p2',
+      name: 'Smart Productivity Dashboard',
+      description: 'A dashboard for tracking learning progress and productivity.',
+      technologies: ['React', 'TypeScript', 'Charts'],
+      link: '#',
+    },
+    {
+      id: 'p3',
+      name: 'AI Career Assistant',
+      description: 'An AI-powered assistant that helps users explore career paths.',
+      technologies: ['AI', 'React', 'TypeScript'],
+      link: '#',
+    },
+  ],
+
+  experience: [
+    {
+      id: 'e1',
+      role: 'Product Designer',
+      company: 'TechNova',
+      duration: '2024 - Present',
+      description:
+        'Designed user experiences and worked with engineering teams to build digital products.',
+    },
+    {
+      id: 'e2',
+      role: 'UI/UX Designer',
+      company: 'Creative Labs',
+      duration: '2022 - 2024',
+      description:
+        'Created interfaces, design systems and user flows for web applications.',
+    },
   ],
 };
 

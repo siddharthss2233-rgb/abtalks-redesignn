@@ -1,8 +1,24 @@
 import { Link } from 'react-router-dom';
 import {
-  Flame, Clock, Trophy, TrendingUp, Award, Bookmark,
-  Settings, Mail, Calendar, Edit3, Flame as FlameIcon,
-  Anchor, Crown, Compass, Moon, GraduationCap,
+    Flame,
+  Clock,
+  Trophy,
+  TrendingUp,
+  Award,
+  Bookmark,
+  Settings,
+  Mail,
+  Calendar,
+  Edit3,
+  Flame as FlameIcon,
+  Anchor,
+  Crown,
+  Compass,
+  Moon,
+  GraduationCap,
+  Code2,
+  BriefcaseBusiness,
+  ExternalLink,
 } from 'lucide-react';
 import {
   currentUser, certificates, userProgress, getCourseById, courses,
@@ -136,6 +152,148 @@ export default function ProfilePage() {
                 </div>
               );
             })}
+          </div>
+        </section>
+
+        {/* Skills */}
+        <section className="mb-12">
+          <SectionHeader
+            title="Skills"
+            subtitle="Technologies and areas I work with"
+            icon={<Code2 className="w-6 h-6 text-brand-500" />}
+          />
+
+          <div className="glass rounded-2xl p-5">
+            <div className="flex flex-wrap gap-3">
+              {currentUser.skills.map((skill) => (
+                <span
+                  key={skill}
+                  className="px-4 py-2 rounded-xl text-sm font-medium border"
+                  style={{
+                    borderColor: 'var(--border-color)',
+                    color: 'var(--text-primary)',
+                    background: 'var(--bg-elevated)',
+                  }}
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Projects */}
+        <section className="mb-12">
+          <SectionHeader
+            title="Projects"
+            subtitle="Things I've built and worked on"
+            icon={<Code2 className="w-6 h-6 text-brand-500" />}
+          />
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {currentUser.projects.map((project, i) => (
+              <div
+                key={project.id}
+                className="glass rounded-2xl p-5 card-hover animate-fade-up"
+                style={{ animationDelay: `${i * 0.08}s` }}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="w-11 h-11 rounded-xl gradient-brand flex items-center justify-center">
+                    <Code2 className="w-5 h-5 text-white" />
+                  </div>
+
+                  {project.link && (
+                    <a
+                      href={project.link}
+                      className="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10"
+                      style={{ color: 'var(--text-secondary)' }}
+                      aria-label={`Open ${project.name}`}
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                    </a>
+                  )}
+                </div>
+
+                <h3
+                  className="mt-4 text-lg font-semibold"
+                  style={{ color: 'var(--text-primary)' }}
+                >
+                  {project.name}
+                </h3>
+
+                <p
+                  className="mt-2 text-sm leading-relaxed"
+                  style={{ color: 'var(--text-secondary)' }}
+                >
+                  {project.description}
+                </p>
+
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {project.technologies.map((tech) => (
+                    <span
+                      key={tech}
+                      className="px-2.5 py-1 rounded-lg text-xs font-medium"
+                      style={{
+                        color: 'var(--text-secondary)',
+                        background: 'var(--bg-sunken)',
+                      }}
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Experience */}
+        <section className="mb-12">
+          <SectionHeader
+            title="Experience"
+            subtitle="My professional journey"
+            icon={<BriefcaseBusiness className="w-6 h-6 text-brand-500" />}
+          />
+
+          <div className="space-y-4">
+            {currentUser.experience.map((item) => (
+              <div
+                key={item.id}
+                className="glass rounded-2xl p-5 card-hover"
+              >
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                  <div>
+                    <h3
+                      className="text-lg font-semibold"
+                      style={{ color: 'var(--text-primary)' }}
+                    >
+                      {item.role}
+                    </h3>
+
+                    <p className="mt-1 text-sm font-medium text-brand-500">
+                      {item.company}
+                    </p>
+                  </div>
+
+                  <span
+                    className="text-sm px-3 py-1.5 rounded-lg whitespace-nowrap"
+                    style={{
+                      color: 'var(--text-secondary)',
+                      background: 'var(--bg-sunken)',
+                    }}
+                  >
+                    {item.duration}
+                  </span>
+                </div>
+
+                <p
+                  className="mt-3 text-sm leading-relaxed"
+                  style={{ color: 'var(--text-secondary)' }}
+                >
+                  {item.description}
+                </p>
+              </div>
+            ))}
           </div>
         </section>
 
